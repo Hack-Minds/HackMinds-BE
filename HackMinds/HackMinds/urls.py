@@ -23,5 +23,5 @@ urlpatterns = [
     path('signup/', create_user, name = "SignUp"),
     path('login/', obtain_auth_token, name= "api-token-auth"),
     path('decks/', DeckAPIView.as_view(), name = "decks"),
-    path('cards/<int>', CardAPIView.as_view(), name = "cards"),
+    path('cards/<int:id>', CardAPIView.as_view(), name = "cards"),
 ]

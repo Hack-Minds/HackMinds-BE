@@ -41,22 +41,26 @@ class DeckAPIView(APIView):
         serializer = DeckModelSerializer(data = data)
         if serializer.is_valid():
             serializer.save(user = request.user)
-            return Response(serializer.data,status.HTTP_201_CREATED)
-        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
         decks      = request.user.decks
-        return Response(DeckModelSerializer(decks, many = True).data,status.HTTP_200_OK)
+        return Response(DeckModelSerializer(decks, many = True).data, status.HTTP_200_OK)
 
 class CardAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request, id):
+        deck       = DeckModel.objects.get(id = id)
         data       = request.data
         serializer = CardModelSerializer(data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        if serializer.is_valid():
+            serializer.save(deck = deck)
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, id):
-        cards      = CardModel.objects.get(deck=id)
-        CardModelSerializer(cards)
+        deck       = DeckModel.objects.get(id = id)
+        cards      = CardModel.objects.get(deck = deck)
+        return Response (CardModelSerializer(cards, many = True).data, status.HTTP_200_OK)
