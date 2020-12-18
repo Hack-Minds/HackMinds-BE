@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.admin import User
 
 class DeckModel(models.Model):
-    id_user     = models.ForeignKey(User, on_delete=models.CASCADE)
+    user     = models.ForeignKey(User, on_delete=models.CASCADE, related_name="decks")
     deck_name   = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
 
@@ -10,7 +10,7 @@ class DeckModel(models.Model):
         return f'Usuario:{self.id_user.username}, Deck:{self.deck_name}'
 
 class CardModel(models.Model):
-    id_deck     = models.ForeignKey(DeckModel, on_delete=models.CASCADE)
+    deck     = models.ForeignKey(DeckModel, on_delete=models.CASCADE, related_name="cards")
     card_name   = models.CharField(max_length=500)
     description = models.CharField(max_length=500)
 
