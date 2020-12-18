@@ -1,0 +1,38 @@
+version: '3.7'
+
+services: 
+  db:
+    image: postgres
+    env_file: db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+
+  api-migrations:
+    build: .
+    image: api
+    volumes:
+      - ./HackMinds/:/code
+    env_file: 
+      - django.env
+      - db.env
+    command: [sh, -c, "python /code/manage.py makemigrations && python /code/manage.py migrate"]
+    depends_on: 
+      - db
+
+  api:
+    image: api
+    volumes:
+      - ./HackMinds/:/code
+    env_file: 
+      - django.env
+      - db.env
+    ports: 
+      - 8000:8000
+    depends_on: 
+      - db
+      - api-migrations
+
+volumes:
+  postgres_data:
