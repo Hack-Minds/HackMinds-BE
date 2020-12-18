@@ -1,3 +1,18 @@
 from django.db import models
 from django.contrib.auth.admin import User
-# Create your models here.
+
+class DeckModel(models.Model):
+    id_user     = models.ForeignKey(User, on_delete=models.CASCADE)
+    deck_name   = models.CharField(max_length=500)
+    description = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f'Usuario:{self.id_user.username}, Deck:{self.deck_name}'
+
+class CardModel(models.Model):
+    id_deck     = models.ForeignKey(DeckModel, on_delete=models.CASCADE)
+    card_name   = models.CharField(max_length=500)
+    description = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f'Deck:{self.id_deck.deck_name} Tarjeta:{self.card_name}'

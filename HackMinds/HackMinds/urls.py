@@ -15,11 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import create_user
+from api.views import create_user, DeckAPIView, CardAPIView
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', create_user, name = "SignUp"),
-    path('login/', obtain_auth_token, name='api-token-auth')
+    path('login/', obtain_auth_token, name= "api-token-auth"),
+    path('decks/', DeckAPIView.as_view(), name = "decks"),
+    path('cards/<int>', CardAPIView.as_view(), name = "cards"),
 ]
