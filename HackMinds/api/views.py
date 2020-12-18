@@ -45,7 +45,7 @@ class DeckAPIView(APIView):
         return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
-        decks      = DeckModel.objects.filter(user=request.user)
+        decks      = request.user.decks
         return Response(DeckModelSerializer(decks, many = True).data,status.HTTP_200_OK)
 
 class CardAPIView(APIView):
@@ -58,5 +58,5 @@ class CardAPIView(APIView):
         serializer.save()
 
     def get(self, request, id):
-        cards      = CardModel.objects.filter(id_deck=id)
+        cards      = CardModel.objects.get(deck=id)
         CardModelSerializer(cards)
