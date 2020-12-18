@@ -38,13 +38,15 @@ class DeckAPIView(APIView):
 
     def post(self, request):
         data       = request.data
-        serializer = DeckModelSerializer(data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        serializer = DeckModelSerializer(data = data)
+        if serializer.is_valid():
+            serializer.save(user = request.user)
+            return Response(serializer.data,status.HTTP_201_CREATED)
+        return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
     
     def get(self, request):
-        decks      = DeckModel.objects.filter(id_user=request.user)
-        DeckModelSerializer(decks)
+        decks      = DeckModel.objects.filter(user=request.user)
+        return Response(DeckModelSerializer(decks, many = True).data,status.HTTP_200_OK)
 
 class CardAPIView(APIView):
     permission_classes = [IsAuthenticated]

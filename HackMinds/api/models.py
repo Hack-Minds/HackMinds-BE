@@ -7,7 +7,7 @@ class DeckModel(models.Model):
     description = models.CharField(max_length=500)
 
     def __str__(self):
-        return f'Usuario:{self.id_user.username}, Deck:{self.deck_name}'
+        return f'Usuario:{self.user.username}, Deck:{self.deck_name}'
 
 class CardModel(models.Model):
     deck     = models.ForeignKey(DeckModel, on_delete=models.CASCADE, related_name="cards")
@@ -15,4 +15,4 @@ class CardModel(models.Model):
     description = models.CharField(max_length=500)
 
     def __str__(self):
-        return f'Deck:{self.id_deck.deck_name} Tarjeta:{self.card_name}'
+        return f'Deck:{self.deck.deck_name} Tarjeta:{self.card_name}'

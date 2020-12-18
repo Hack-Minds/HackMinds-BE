@@ -13,7 +13,8 @@ class UserSerializer(serializers.ModelSerializer):
 class DeckModelSerializer(serializers.ModelSerializer):
     class Meta:
         model  = DeckModel
-        fields = '__all__'
+        exclude = ['user']
+
 
 class CardModelSerializer(serializers.ModelSerializer):
     class Meta:
