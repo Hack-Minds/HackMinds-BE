@@ -1,5 +1,7 @@
 # Django
 from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+
 
 # Django REST Framwork
 from rest_framework import status
@@ -54,13 +56,16 @@ class CardAPIView(APIView):
     def post(self, request, id):
         deck       = DeckModel.objects.get(id = id)
         data       = request.data
-        serializer = CardModelSerializer(data)
+        serializer = CardModelSerializer(data = data)
         if serializer.is_valid():
             serializer.save(deck = deck)
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, id):
-        deck       = DeckModel.objects.get(id = id)
-        cards      = CardModel.objects.get(deck = deck)
-        return Response (CardModelSerializer(cards, many = True).data, status.HTTP_200_OK)
+        if DeckModel.objects.filter(id=id).exists():
+            deck  = DeckModel.objects.get(id = id)
+            cards = deck.cards
+            return Response (CardModelSerializer(cards, many = True).data, status.HTTP_200_OK)
+        else:
+            return Response({'error': f'There is no Deck with id:{id}'}, status.HTTP_404_NOT_FOUND)

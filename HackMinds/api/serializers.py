@@ -19,4 +19,4 @@ class DeckModelSerializer(serializers.ModelSerializer):
 class CardModelSerializer(serializers.ModelSerializer):
     class Meta:
         model  = CardModel
-        fields = '__all__'
+        exclude = ['deck']
